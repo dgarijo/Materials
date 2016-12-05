@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>WINGS Tutorial</title>
+<link rel="stylesheet" href="styles/style.css" media="screen" />
+<link rel="stylesheet" href="styles/media-queries.css" />
+<link rel="stylesheet" href="./flex-slider/flexslider.css" type="text/css" media="screen" />
+<link href="styles/prettyPhoto.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="styles/tipsy.css" rel="stylesheet" type="text/css" media="screen" />
+<script type="text/javascript" src="./scripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="./flex-slider/jquery.flexslider-min.js"></script>
+<script src="scripts/jquery.prettyPhoto.js" type="text/javascript"></script>
+<script src="scripts/jquery.tipsy.js" type="text/javascript"></script>
+<script src="scripts/jquery.knob.js" type="text/javascript"></script>
+<script type="text/javascript" src="./scripts/jquery.isotope.min.js"></script>
+<script type="text/javascript" src="./scripts/jquery.smooth-scroll.min.js"></script>
+<script type="text/javascript" src="./scripts/waypoints.min.js"></script>
+<script type="text/javascript" src="./scripts/setup.js"></script>
+</head>
+<body>
+  <div id="wrap">
+   <div id="sidebar"> 
+     <ul id="navigation">
+       <li><a href="#home" class="active">Summary</a></li>
+	   <li><a href="#creating" >Creating workflows</a></li>
+       <li><a href="#abstract">Creating abstract components</a></li>
+	   <li><a href="#constraints">Creating constraints</a></li>
+	   <li><a href="#software">Uploading software</a></li>
+     </ul>
+   </div>
+   <div id="container"> 
+     <!-- page container -->
+     <div class="page" id="home"> 
+       <!-- page home -->
+       <div class="page_content">
+        <h3  class="page_title">WINGS tutorial <br/>Stanford 12/5/2016</h3>
+		<div class="space"> </div>
+		<div class="clear"> </div>
+			<p>
+			  This page describes a series of hands on exercises to be performed by the participants of the WINGS tutorial in Stanford, on December 5th.  
+			</p>
+
+	    </div> 
+	</div>
+	
+	<div class="page" id="creating">	
+	<div class="page_content">
+	<h4 class="blue"> Hands on exercise 1: Creating workflows in WINGS</h4>
+	<div class="space"> </div>
+
+		<p>
+			<strong>Description</strong>: This exercise aims to guide users through the main tasks associated to the creation of a workflow, assuming the components exist in the library. This tutorial will cover how to create workflows and how to concatenate component input and outputs.
+			</p>
+		<p>
+			The tutorial consists on recreating one of the workflows introduced on the previous session. In particular, the <strong>BCFVarCaller</strong> workflow: 
+		 </p>
+		 <div class="center">				
+			<img src="images/ho1_workflow.png" alt="BCFVarCaller workflow" width="350">
+			<div><b>Fig 1</b>: BCFVarCaller workflow</div>
+		 </div>
+		 <p>
+			To create a new workflow, click on “Analysis>Edit Workflows”:
+		 </p>
+		 <div class="center">				
+			<img src="images/ho1_im2.png" alt="Edit workflows" width="350">
+			<div><b>Fig 2</b>: Edit workflows interface</div>
+		 </div>
+		 
+		 <p>
+			And click “New template” on the top left:
+		 </p>
+		 <div class="center">				
+			<img src="images/ho1_im3.png" alt="New template" width="200">
+			<div><b>Fig 3</b>: Selecting a new template</div>
+		 </div>
+		 <p>
+			<strong>Action</strong>: Select a name for your new workflow template and click “OK”. Navigate to “Components” tab  and add the “mpileupVCFCaller”, “callBcftools”, “vcftoTsv” and “plotBasicHist” components to the canvas:
+		 </p>
+		 <div class="center">				
+			<img src="images/ho1_im4.png" alt="Adding components to the canvas" width="650">
+			<div><b>Fig 4</b>: Adding components to the canvas</div>
+		 </div>
+		 <p>
+			The components appear in red because they are not connected to each other. You can connect them by clicking on their inputs and outputs, which are represented with small squares on top and bottom. For example, the output of mpileupVCFCaller is represented in red in the figure below:
+		 </p>
+		 <div class="center">				
+			<img src="images/ho1_im5.png" alt="Connecting inputs and outputs" width="350">
+			<div><b>Fig 5</b>: Connecting inputs and outputs</div>
+		 </div>
+		 <p>
+			<strong>Action</strong>:  Connect the inputs and outputs of the rest of the components until all of them appear in black, as in the figure below. <strong>Don’t forget to save it!!</strong>:
+		 </p>
+		 <div class="center">				
+			<img src="images/ho1_workflow.png" alt="BCFVarCaller workflow" width="350">
+			<div><b>Fig 6</b>: BCFVarCaller workflow</div>
+		 </div>
+		 <p>
+			Congratulations! You have successfully created your workflow.  Try to run it as shown in the previous session! (Analysis>Run workflows)
+		</p>
+
+	<div class="clear"> </div>
+	</div>
+	</div>
+
+
+		<div class="page" id="abstract"> 
+		<div class="page_content">
+		<h4  class="blue"> Hands on exercise 2: Creating abstract components in WINGS</h4>
+		<p>
+		<strong>Description</strong>: This exercise aims to guide you through the tasks associated to the creation of a workflow with abstract components, assuming the components exist in the library. 
+		</p><p>
+		By the end of the previous exercise, we should have a workflow similar to the one in Figure 6. Note that inputs and outputs may have different names if they are dragged out in a different order. If you click on the “Layout” button, your workflow will be redrawn as shown in Figure 6.
+		</p><p>
+		But now imagine that we want to be more flexible and use other components instead of “callBcftools” for executing the workflow. In order to achieve this goal, we need abstract components. If we go to the component library tab, we can see that “callBcftools” is a type of “SNPIndelCaller”. 
+		</p>
+		 <div class="center">				
+			<img src="images/ho2_im1.png" alt="Component types" width="250">
+			<div><b>Fig 7</b>: Component types</div>
+		 </div>
+		 <p>
+		If we replace callBcftools with the SNPIndelCaller abstract component, now our workflow will be more generic. That means that we will be able to run the same workflow with both callBcftools or varScan components.
+		</p>
+		 
+		 <p>
+		<strong>Action</strong>: A component can be deleted by selecting it and clicking “Delete Selected”. Delete the first three concrete components of the workflow and replace them with their abstract compontents: replace mpileUpCaller with GenerateReadPileUP; CallBcfTools with SNPINdelCaller and bcfVarFilter with VarianFilter. Save the results. The following workflow will be the result:
+		</p>
+		 <div class="center">				
+			<img src="images/ho2_im2.png" alt="Abstract caller workflow" width="250">
+			<div><b>Fig 8</b>: Abstract caller workflow</div>
+		 </div>
+		 <p>
+		Now when executing the workflow (Analysis> Run workflows tab) and selecting the input data to use, WINGS will automatically recognize how the abstract components should be implemented. For example, if we plan the workflow selecting a vcfbarfilter parameter file, WINGS will select the mpileupcVCFCaller, callBcftools and bcfVarFilter steps for the implementation: 
+		 </p>
+		 <div class="center">				
+			<img src="images/ho2_im3.png" alt="Executing the abstract workflow (1)" width="400">
+			<div><b>Fig 9</b>: Executing the abstract workflow (1)</div>
+		 </div>
+		 <div class="center">				
+			<img src="images/ho2_im4.png" alt="Executing the abstract workflow (2)" width="300">
+			<div><b>Fig 10</b>: Executing the abstract workflow (2)</div>
+		 </div>
+		 <p>
+ 
+		However, if we select the varscan parameter file and the mpileup parameter file:
+		  </p>
+		 <div class="center">				
+			<img src="images/ho2_im5.png" alt="Executing the abstract workflow (3)" width="400">
+			<div><b>Fig 11</b>: Executing the abstract workflow (3)</div>
+		 </div>
+		 <p>
+			Then Wings will select the mpileupCaller, varScan and bcfFilter components for implementing the workflow.
+
+			</p>
+		 <div class="center">				
+			<img src="images/ho2_im6.png" alt="Executing the abstract workflow (4)" width="300">
+			<div><b>Fig 12</b>: Executing the abstract workflow (4)</div>
+		 </div>
+		 
+
+		<div class="clear"> </div>
+		</div>
+		</div>
+
+		<div class="page" id="constraints"> 
+		<div class="page_content">
+		<h4  class="blue"> Hands on exercise 3:  Adding constraints to components in WINGS</h4>
+		<p>
+		<strong>Description</strong>: The purpose of this exercise is to guide you when editing and adding constraints to an existing component in the workflow library. 
+		Constraints are great to validate, select and propagate metadata through workflows. In this exercise we are going to add some constraints to the abstract workflow we created in the previous hands on exercise. Note that for the sake of simplicity, refFile is now shared by “GenerateReadPileup” and “SNPIndetCaller”.
+		</p>
+		 <div class="center">				
+			<img src="images/ho3_im1.png" alt="Abstract workflow" width="300">
+			<div><b>Fig 12</b>: Abstract workflow</div>
+		 </div>
+		<p> 
+		GenerateReadPileup and SNPIndel Caller are both VariantCallers. And we want to make sure that 1) the “varFile” output they consume and produce has a “GenomicBuildID” which refers to the same value. 2) both the “VarFile” and the “refFile” have the same GenomicBuildID. 
+		In the component (Advanced>Manage Component Types and selecting “GenerateReadPileup”), we can see that refFile is of type “GenomicFastaFile”, while dataFile is of type “AlignedFile”
+		</p>
+		 <div class="center">				
+			<img src="images/ho3_im2.png" alt="Exploring types of component inputs" width="600">
+			<div><b>Fig 13</b>: Exploring types of component inputs</div>
+		 </div>
+		<p> 
+		 
+		If we look for some data of these types in the Advanced> Manage Data tab and select a “AlignedFile”, we find different files (the files may vary according to what has been uploaded in the previous sessions):
+		</p>
+		 <div class="center">				
+			<img src="images/ho3_im3.png" alt="Types of BAM files" width="400">
+			<div><b>Fig 14</b>: Types of BAM files</div>
+		 </div>
+		<p>  
+		By clicking on one of them, we can see their metadata properties. For example, for canary_test.bam, we see that its “hasGenomicBuildID” value is “hg19”:
+		</p>
+		 <div class="center">				
+			<img src="images/ho3_im4.png" alt="Metadata properties of a file" width="600">
+			<div><b>Fig 15</b>: Metadata properties of a file</div>
+		 </div>
+		<p>  
+		The first rule we will add to the workflow propagates this metadata for the GenerateReadPileup component. 
+		Action: Go to the Advanced>Manage Component Type tab, select “GenerateReadPileup”, click on the “Rules” tab and add the following text:
+		<pre>
+	[ propagateInputType: #This is the rule title
+	(?c rdf:type acdom:GenerateReadPileupClass) #Begin body of the rule
+	(?c ac:hasInput ?in1) (?in1 ac:hasArgumentID 'dataFile')
+	(?in1 dcdom:hasGenomicBuildID ?val1)
+	(?c ac:hasOutput ?odv)
+	(?odv ac:hasArgumentID 'varFile')
+	-> (?odv dcdom:hasGenomicBuildID ?val1) #Rule actions
+	print(Asserted ?val1 as output of ?odv)
+	]</pre>
+		</p>
+		 <div class="center">				
+			<img src="images/ho3_im5.png" alt="Adding rules to a component" width="400">
+			<div><b>Fig 16</b>: Adding rules to a component</div>
+		 </div>
+		<p>  
+		The rule indicates that if there is a component of type “GenerateReadPileup” in the workflow and has an input named “dataFile” with a genomicBuildID, then the output of the component should also have that genomicBuildID as well.
+		Action: Plan the workflow (go to Analysis>Run and select your previously created workflow) and check that after selecting data, the metadata is propagated appropriately. A file with the metadata field “hasGenomicBuildID” has to be selected:
+		</p>
+		 <div class="center">				
+			<img src="images/ho3_im6.png" alt="Metadata propagation in the workflow" width="600">
+			<div><b>Fig 17</b>: Metadata propagation in the workflow</div>
+		 </div>
+		<p>  
+		The varFile output from the GenerateReadPileup component (varFile3 in the previous figure) in the planned workflow should have the genomicBuildID value used by the “dataFile” input of GenerateReadPileUp.
+		Now that metadata is appropriately propagated through the workflow, let’s create another rule.
+		Action: copy the text below in the “Rules” tab of the “VariantCaller” component (in Advanced>Manage Component Types and selecting “VariantCaller”):
+		<pre>
+	[ sameGenomicBuildID:
+	(?c rdf:type acdom:VariantCallerClass)
+	(?c ac:hasInput ?in1)
+	(?in1 ac:hasArgumentID 'dataFile')
+	(?c ac:hasInput ?in2)
+	(?in2 ac:hasArgumentID 'refFile')
+	(?in1 dcdom:hasGenomicBuildID ?val1)
+	(?in2 dcdom:hasGenomicBuildID ?val2)
+	notEqual(?val1 ?val2)
+	-> (?c ac:isInvalid 'true'^^http://www.w3.org/2001/XMLSchema#boolean)
+	print(Cannot run workflow if refFile and dataFile don't have the same build id)
+	]</pre>
+		The result should look as in the image below:
+		</p>
+		 <div class="center">				
+			<img src="images/ho3_im7.png" alt="Adding rules to an abstract component" width="400">
+			<div><b>Fig 18</b>: Adding rules to an abstract component</div>
+		 </div>
+		<p>  
+		The rule states that if a component of type VariantCaller has an input “dataFile” and another “refFile”, then their “genomicBuildIDs” have to be the same. Otherwise, an error is triggered.
+		Action: Check that when selecting input files with different genomicBuildIDs, the workflow cannot be executed. For example, the following configuration will lead to an error:
+		</p>
+		 <div class="center">				
+			<img src="images/ho3_im8.png" alt="Workflow validation" width="400">
+			<div><b>Fig 19</b>: Workflow validation</div>
+		 </div>
+		<p>  
+		While the following one, using the same genomicBuildIDs, allows planning and executing the workflow:
+		</p>
+		 <div class="center">				
+			<img src="images/ho3_im9.png" alt="Workflow planning with the right components" width="700">
+			<div><b>Fig 20</b>: Workflow planning with the right components</div>
+		 </div> 
+		</div>
+		<div class="clear"> </div>
+		</div>
+
+		<div class="page" id="software"> 
+		<div class="page_content">
+		<h4  class="blue"> Hands on exercise 4: Uplodading software to a component in WINGS</h4>
+		<p>
+		<strong>Description</strong>: The purpose of this exercise is to guide users on how to add components to WINGS.
+		</p>
+		<p>
+		WINGS creates workflows with components. Each component, as we have seen in the previous exercises, performs a main type of functionality. In order to upload your own components to WINGS, you must create a wrapper for your code. We will start with a simple example, adding a component that copies the contents of an input into the output. This can be done in the console with a single command: 
+		</p>
+		<pre>cp input output</pre>
+		<p>
+		<strong>Action</strong>: Create a new component on your domain (Advanced>Manage Components) and call it “test”. Go to “Manage Components” and click on “Add component”. Assign it an input and an output. In my case, I chose “i1” and “o1” of type “BAMfile”. The inputs and outputs of your components are what we will use to concatenate components in workflows.
+		</p>
+		  <div class="center">				
+					<img src="images/ho4_im1.png" alt="Component example" width="700">
+					<div><b>Fig 21</b>: Component example</div>
+				 </div>
+		<p>		 
+		At the moment your component will appear in red. This means that no code has been uploaded for yet and therefore, the system cannot execute it. How to upload code for it?
+		</p>
+		<p>
+		<strong>Action</strong>:  Download the following template for adding components from <a href="test.zip">this link</a>. Open the zip file. You will find a run.sh shell script and an io.sh script. The run.sh script contains the copy command, and looks like the following:
+		</p>
+		  <div class="center">				
+					<img src="images/ho4_im2.png" alt="Run.sh" width="500">
+					<div><b>Fig 22</b>: Run.sh script</div>
+				 </div>
+		<p>
+
+		You can ignore everything except for line 14 and 17. Line 14 refers to the script io.sh used by WINGS to map the inputs we declared in the WINGS interface to the script. The line copies into three arrays ($INPUTS, $PARAMETERS and $OUTPUTS) the inputs, parameters and outputs used to be used by the current script. In this particular case we have 1 input, 0 parameters and 1 output. Therefore, we run io.sh with “1 0 1”. If we had a component with 3 inputs, 2 parameters and 1 output, we would run it with “3 2 1”.
+		Line 17 executes the copy command we wanted to implement. In this case we are copying the input file in the output file, so we refer to them with their identifiers ($INPUTS1 and $OUTPUTS1). Now it is time to execute the component on WINGS.
+		</p>
+		<p>
+		<strong>Action</strong>: upload your test component. You can upload by selecting the component and clicking on "upload", on the top right corner.
+		</p>
+		<div class="center">				
+					<img src="images/ho4_download.png" alt="Uploading a component" width="200">
+					<div><b>Fig 23</b>: Uploading a component</div>
+				 </div>
+		<p>
+		Check that the name of the .zip file is the same as the one you provided for the component in the system. Go to the template editor tab (Advanced>Edit workflows) and create a new template with your component. Go to the template browser (Advanced>Run Workflows) tab and plan your workflow to test that it works. The template should look similar to the image below:
+		</p>
+		  <div class="center">				
+					<img src="images/ho4_im3.png" alt="Template sample" width="400">
+					<div><b>Fig 24</b>: Template sample</div>
+				 </div>
+		<p>
+		 
+		  In the access results tab (Analysis>Access Results), you should see your run. If you click on the results of your execution (which should finish quickly if you didn’t pick up a big file), you can verify that the input is indeed the same as the output:
+		  
+		  </p>
+		  <div class="center">				
+					<img src="images/ho4_im4.png" alt="Accessing a result" width="400">
+					<div><b>Fig 25</b>: Accessing a result</div>
+				 </div>
+		<p>
+		 
+		Congratulations! You have uploaded successfully your first component to WINGS!
+		Now let’s explore something more complex. Download the code for the “MPileupCaller” component.
+		</p>
+		<p>
+		<strong>Action</strong>: Download the MpileupCaller code by selecting the component and clicking the “download” button on the top right of the screen:
+		 
+		 </p>
+		  <div class="center">				
+					<img src="images/ho4_im5.png" alt="Downloading a component" width="200">
+					<div><b>Fig 26</b>: Downloading a component</div>
+				 </div>
+		<p>
+		Open the zip file and check the run.sh script. 
+
+		</p>
+		  <div class="center">				
+					<img src="images/ho4_im6.png" alt="Run.sh script" width="500">
+					<div><b>Fig 27</b>: Run.sh script</div>
+				 </div>
+		<p>
+		 
+		As you can see, line 14 invokes again the io.sh script. In this case, the component has 3 inputs and 1 output., so it is invoked with the “3 0 1” parameters.
+		Line 20 invokes the SAMTOOLS software installed in WINGS. In this particular case, the $SAMTOOLS13_HOME variable is known beforehand and stored in the server. All the script does is to execute the mpileup software in samtools, stating how each input and output corresponds to the right place. 
+		</p>
+		<p>
+		This approach for designing components allows you to execute any bash script that invokes any of the software tools installed on the server. If you write a script or create a self-contained executable file for your software (e.g., JAR file), you may even include them in your component zip file and invoke them in the run.sh script.
+		Another way of installing software in WINGS is through <strong>Docker containers</strong>. Docker containers help replicate the environment and dependencies of a software, allowing us to execute it independently of the computing environment we are using at the moment. Let’s go through an example.
+		</p>
+		<p>
+		<strong>Action</strong>:  install Docker: <a href="https://docs.docker.com/engine/installation/">https://docs.docker.com/engine/installation/</a>. Try downloading a sample image to test its functionality with the following command: 
+		<pre>docker run hello-world</pre>
+		 You should see the following on your screen:
+		</p>
+		  <div class="center">				
+					<img src="images/ho4_im7.png" alt="Component example" width="600">
+					<div><b>Fig 28</b>: Docker hello world</div>
+				 </div>
+		<p>
+		 
+		Docker handles two main concepts: containers and images. The images indicate how to set up and create an environment. The containers are the processes in charge of executing an image. In the previous example we have created a container for the image “hello-world” and we have executed it. 
+		</p>
+		<p>
+		Docker has a local repository where it stores it the images we create. Some images are stored on default repositories online, such as the one we just retrieved. When we try to execute an image, Docker tries to find it online. If the system finds it, it will download it to our local repository. To browse over the images stored in your local repository, run the following command: docker images. At the moment you should only see the “hello-world” image.
+		</p>
+		<p>
+		<strong>Action</strong>: Download an Ubuntu image. Execute the following command: docker run ubuntu. This will install a whole clean Ubuntu image on your local repository. In order to test it, run any unix command: 
+		</p>
+		
+		<pre>docker run ubuntu echo hello world</pre> 
+		<p>
+		You should see something similar to the following:
+
+		</p>
+		  <div class="center">				
+					<img src="images/ho4_im8.png" alt="Running a Docker container with an ubuntu image" width="700">
+					<div><b>Fig 29</b>: Running a Docker container with an ubuntu image</div>
+				 </div>
+		<p>
+		 
+		Which is the same output you would obtain when executing that command in a terminal. The next step is to build an image for the software we want to install. In this example we will show how to do an image for samtools, the software we have used for the mpileup caller component. 
+		</p><p>
+		<strong>Action</strong>:  create a file and add the following text (the tabs indicate the commands continue in the previous line):
+		</p>
+		<pre>
+from ubuntu
+MAINTAINER add yourself here emailgoeshere@example.com
+RUN apt-get update && apt-get install -y python unzip gcc make bzip2 zlib1g-dev 
+	ncurses-dev
+COPY samtools-1.3.1.tar.bz2 samtools.tar.bz2
+RUN bunzip2 samtools.tar.bz2 && tar xf samtools.tar && mv samtools-1.3.1 samtools 
+	&& cd samtools && make
+ENV PATH /samtools:$PATH</pre>
+		 <p>The file should look similar to the following one: </p>
+		  <div class="center">				
+					<img src="images/ho4_im9.png" alt="Creating a Docker file" width="700">
+					<div><b>Fig 30</b>: Creating a Docker file</div>
+				 </div>
+		<p>
+		 
+		This image modifies the Ubuntu image we downloaded before, installing python, unzip, gcc, make, bzip2, zlib-dev and ncurses-dev, which are packages used by the tool. Thanks to this, we will have access to those commands from our Linux terminal in our container. The second command copies the software we want to install into the container (download it from <a href="https://sourceforge.net/projects/samtools/files/samtools/">https://sourceforge.net/projects/samtools/files/samtools/</a>), unzips it and compiles it, adding “/samtools” to the system path.
+		</p>
+		<p>
+		<strong>Action</strong>:  Build the image you have created and check that docker adds it to the local repository. This may take a little time:
+		docker build -t youruser/nameOfImage .
+		youruser/nameOfImage is just a way to tag the images you create. In my case I named it dgarijo/test:v1. Later, when running the image as a container, we will use this name.
+		When Docker finishes, you should see a list of your images, similar to:
+		 
+		 </p>
+		  <div class="center">				
+					<img src="images/ho4_im10.png" alt="Listing images in Docker" width="700">
+					<div><b>Fig 31</b>: Listing images in Docker</div>
+				 </div>
+		<p>
+		 
+		Congratulations! You have just added successfully your image to your local repository. These images can be committed and exported in online repositories for others to download. That way, other researchers won’t have to build the images themselves. For example, the following image: docker pull quagbrain/tophat-bowtie2-samtools has already installed tophat, bowtie2 and samtools.
+		Now that our image is in our local repository, let’s run it:
+		</p>
+		<p>
+		<strong>Action</strong>: Execute the following command: docker run IMAGENAME samtools/samtools mpileup, where IMAGENAME is the name you have to your image (in my example, dgarijo/test:v1). As a result, you should see the following:
+		 
+		 </p>
+		  <div class="center">				
+					<img src="images/ho4_im11.png" alt="Running mpileup in our Docker image" width="700">
+					<div><b>Fig 32</b>: Running mpileup in our Docker image</div>
+				 </div>
+		<p>
+		Since we tried to execute the mpileup software without any input files, the system shows the samtools help interface. In order to be able to share the inputs files with our docker container, we need to mount a volume, i.e., tell the system that we want to share a folder with the container. This can be done with the “-v” option. 
+		</p><p>
+		<strong>Action</strong>:  execute the following command: docker run -v PathToFolderYouWantToShare:/out ubuntu cp /out/dockerFile /out/dockerFileCopied where the PathOfTheFolderYouWantToShare is the folder where you created the docker file. This will result in a copy of the docker file as “dockerFileCopied” in the folder you mounted in Docker.
+		</p><p>
+		Finally, let’s use Docker with samtools to sort a bam file. You can download one from the domain in WINGS.
+		</p><p>
+		<strong>Action</strong>:  execute the following command: 
+		</p>
+		<pre>docker run -v PathOfTheFolderWithTheBamFile:/out nameOfYourImage samtools/samtools 
+sort -o /out/sorted.bam /out/canary_test.bam</pre> 
+		<p>
+		After a few seconds, you should see that the program ends, and a new file “sorted.bam” has appeared in your shared file.
+		 
+		 </p>
+		  <div class="center">				
+					<img src="images/ho4_im12.png" alt="Sorting a bam file with samtools in Docker" width="700">
+					<div><b>Fig 33</b>: Sorting a bam file with samtools in Docker</div>
+				 </div>
+		<p>
+		Congratulations! Your container works as expected. 
+		The next step is to send us the Docker file you just validated and add the invocation to the WINGS run.sh script:
+		   </p>
+		  <div class="center">				
+					<img src="images/ho4_im13.png" alt="Modifying run.sh to add the Docker commands" width="700">
+					<div><b>Fig 34</b>: Modifying run.sh to add the Docker commands</div>
+				 </div>
+	</div>
+	<div class="clear"> </div>
+	</div>
+
+<div class="page"> 
+<!-- page industries -->	
+
+<div class="page_bottom"><div class="center"><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png" /></a><br/>This page was created by <a href="https://w3id.org/people/dgarijo">Daniel Garijo</a>. It is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">Creative Commons Attribution-NonCommercial-ShareAlike 2.0 Generic License</a>.
+</div>
+</div>
+</div>
+<a class="gotop hidden" href="#top">Top</a>
+</div>
+</div>
+</body>
+</html>
