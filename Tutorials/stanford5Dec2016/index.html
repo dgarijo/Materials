@@ -405,7 +405,8 @@ ENV PATH /samtools:$PATH</pre>
 		</p>
 		<p>
 		<strong>Action</strong>:  Build the image you have created and check that docker adds it to the local repository. This may take a little time:
-		docker build -t youruser/nameOfImage .
+		<pre>
+docker build -t youruser/nameOfImage .</pre>
 		youruser/nameOfImage is just a way to tag the images you create. In my case I named it dgarijo/test:v1. Later, when running the image as a container, we will use this name.
 		When Docker finishes, you should see a list of your images, similar to:
 		 
