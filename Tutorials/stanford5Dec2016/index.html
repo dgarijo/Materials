@@ -28,6 +28,10 @@
        <li><a href="#abstract">Creating abstract components</a></li>
 	   <li><a href="#constraints">Creating constraints</a></li>
 	   <li><a href="#software">Uploading software</a></li>
+		<li class="peque"><a href="#software1">Uploading a script</a></li>
+		<li class="peque"><a href="#software2">Using Docker images</a></li>
+		<li class="peque"><a href="#software3">Using Docker files</a></li>
+		
      </ul>
    </div>
    <div id="container"> 
@@ -269,7 +273,7 @@
 		<div class="page_content">
 		<h4  class="blue"> Hands on exercise 4: Uplodading software to a component in WINGS</h4>
 		<p>
-		<strong>Description</strong>: The purpose of this exercise is to guide users on how to add components to WINGS.
+		<strong id="software1">Description</strong>: The purpose of this exercise is to guide users on how to add components to WINGS.
 		</p>
 		<p>
 		WINGS creates workflows with components. Each component, as we have seen in the previous exercises, performs a main type of functionality. In order to upload your own components to WINGS, you must create a wrapper for your code. We will start with a simple example, adding a component that copies the contents of an input into the output. This can be done in the console with a single command: 
@@ -348,8 +352,14 @@
 		</p>
 		<p>
 		This approach for designing components allows you to execute any bash script that invokes any of the software tools installed on the server. If you write a script or create a self-contained executable file for your software (e.g., JAR file), you may even include them in your component zip file and invoke them in the run.sh script.
-		Another way of installing software in WINGS is through <strong>Docker containers</strong>. Docker containers help replicate the environment and dependencies of a software, allowing us to execute it independently of the computing environment we are using at the moment. Let’s go through an example.
+		Another way of installing software in WINGS is through <strong>Docker containers and images</strong>, further described below. 
 		</p>
+		
+		<h4 class="blue"  id="software2">Dockerizing your software: Docker images and containers</h4>
+		<p>
+		Docker containers help replicating the environment and dependencies of a software, allowing us to execute it independently of the computing environment we are using at the moment. Docker handles two main concepts: containers and images. The images indicate how to set up and create an environment. The containers are the processes in charge of executing an image. In WINGS, containers can be created in two different ways: by using an existing image or by creating your own. Let's start with the simpler, which is to reuse an existing image.
+		</p>
+		
 		<p>
 		<strong>Action</strong>:  install Docker: <a href="https://docs.docker.com/engine/installation/">https://docs.docker.com/engine/installation/</a>. Try downloading a sample image to test its functionality with the following command: 
 		<pre>docker run hello-world</pre>
@@ -361,13 +371,15 @@
 				 </div>
 		<p>
 		 
-		Docker handles two main concepts: containers and images. The images indicate how to set up and create an environment. The containers are the processes in charge of executing an image. In the previous example we have created a container for the image “hello-world” and we have executed it. 
+		 In the previous example we have created a container for the image “hello-world” and we have executed it. 
 		</p>
 		<p>
-		Docker has a local repository where it stores it the images we create. Some images are stored on default repositories online, such as the one we just retrieved. When we try to execute an image, Docker tries to find it online. If the system finds it, it will download it to our local repository. To browse over the images stored in your local repository, run the following command: docker images. At the moment you should only see the “hello-world” image.
+		Docker has a local repository where it stores the images we create. Some images are stored on default repositories online, such as the one we just retrieved. When we try to execute an image, Docker tries to find it online (e.g., on the <a href="https://hub.docker.com">Docker hub repository</a>). If the system finds it, it will download it to our local repository. To browse over the images stored in your local repository, run the following command: docker images. At the moment you should only see the “hello-world” image.
 		</p>
 		<p>
-		<strong>Action</strong>: Download an Ubuntu image. Execute the following command: docker run ubuntu. This will install a whole clean Ubuntu image on your local repository. In order to test it, run any unix command: 
+		<strong>Action</strong>: Download an Ubuntu image. Execute the following command: 
+		<pre>docker run ubuntu</pre>
+		This will install a whole clean Ubuntu image on your local repository. In order to test it, run any unix command like: 
 		</p>
 		
 		<pre>docker run ubuntu echo hello world</pre> 
@@ -381,9 +393,42 @@
 				 </div>
 		<p>
 		 
-		Which is the same output you would obtain when executing that command in a terminal. The next step is to build an image for the software we want to install. In this example we will show how to do an image for samtools, the software we have used for the mpileup caller component. 
+		Which is the same output you would obtain when executing that command in a terminal. If your software is widely used, someone probably will have created an image and posted it online. In this example we will show how to reuse an image for samtools, the software we have used for the mpileup caller component. 
+		</p>
+		<p>
+		<strong>Action</strong>: Download a samtools image and test it on your local computer. After looking in docker hub, we can see that the official release for samtools is comics/samtools. Therefore, in order to import it to our local domain, we just have to perform the following command:
+		<pre>docker pull comics/samtools</pre>
+		Which will download the latest version. You can also specify the version by using the tag. For example comics/samtools:v1. Now you can try to execute the image locally, to see whether it works. Let's try to invoke the mpileup software: 
+		<pre>docker run comics/samtools samtools mpileup</pre>
+		Since we have not specified any inputs, you will see the following on screen.
+		</p>
+		<div class="center">				
+			<img src="images/ho4_im9executingImage.png" alt="Executing the comics/samtools image locally" width="700">
+			<div><b>Fig 30</b>: Executing the comics/samtools image locally</div>
+		 </div>
+		Basically, the program runs, but it is asking for its correct usage (we didn't invoked it correctly). Since the mpileup software requires three inputs, in this tutorial we are going to choose a simpler function from the samtools software: sort, which sorts an input bam file. In order to be able to pass the inputs file to our docker container, we need to mount a volume, i.e., tell the system that we want to share a folder with the container. This can be done with the “-v” option. 
+		</p>
+		<p>
+		<strong>Action</strong>:  execute the following command: 
+		<pre>docker run -v PathToFolderYouWantToShare:/out comics/samtools samtoolssort -o 
+/out/sorted.bam /out/inputFileToSort.bam</pre> 
+		Where the PathOfTheFolderYouWantToShare is the folder where you have your input file ("inputFileToSort.bam"). This will result in a sorted file ("sorted.bam") of the input file “inputFileToSort” in the folder "PathToFolderYouWantToShare". Now that we have tested our image locally, we should test it on Wings.</p>
+		<p>
+		<strong>Action</strong>: Create a component in Wings and use the Docker image to invoke it (you can <a href="test.zip">a component template in this link</a>). The component should look similar to the picture below:
+		<div class="center">				
+			<img src="images/ho4_im10WingsComp.png" alt="WINGS component using a Docker image" width="700">
+			<div><b>Fig 31</b>: WINGS component using a Docker image</div>
+		 </div>
+		<p>The script is similar to the console command we have executed locally, but copies the input to the local folder in order. The local folder is mounted in WINGS using the previous "-v" Docker command. The outputs are copied to the appropriate folder for WINGS (using "cp"), and the local files are removed ("rm" command).</p>
+		
+		<p>Congratulations! you have a "Dockerized" component in WINGS! However, what would happen if you want to create your own image? We address this in the next section.</p>
+		
+		
+		<h4 class="blue" id="software3">Creating Docker files</h4>
+		<p>
+		The first step is to build an image for the software we want to install.
 		</p><p>
-		<strong>Action</strong>:  create a file and add the following text (the tabs indicate the commands continue in the previous line):
+		<strong>Action</strong>: create a file and add the following text (the tabs indicate the commands continue in the previous line):
 		</p>
 		<pre>
 from ubuntu
@@ -397,44 +442,42 @@ ENV PATH /samtools:$PATH</pre>
 		 <p>The file should look similar to the following one: </p>
 		  <div class="center">				
 					<img src="images/ho4_im9.png" alt="Creating a Docker file" width="700">
-					<div><b>Fig 30</b>: Creating a Docker file</div>
+					<div><b>Fig 32</b>: Creating a Docker file</div>
 				 </div>
 		<p>
 		 
-		This image modifies the Ubuntu image we downloaded before, installing python, unzip, gcc, make, bzip2, zlib-dev and ncurses-dev, which are packages used by the tool. Thanks to this, we will have access to those commands from our Linux terminal in our container. The second command copies the software we want to install into the container (download it from <a href="https://sourceforge.net/projects/samtools/files/samtools/">https://sourceforge.net/projects/samtools/files/samtools/</a>), unzips it and compiles it, adding “/samtools” to the system path.
+		This image modifies the Ubuntu image we downloaded before, installing python, unzip, gcc, make, bzip2, zlib-dev and ncurses-dev, which are packages used by samtools. Thanks to this, we will have access to those commands from our Linux terminal in our container. The second command copies the software we want to install into the container (download it from <a href="https://sourceforge.net/projects/samtools/files/samtools/">https://sourceforge.net/projects/samtools/files/samtools/</a>), unzips it and compiles it, adding “/samtools” to the system path.
 		</p>
 		<p>
 		<strong>Action</strong>:  Build the image you have created and check that docker adds it to the local repository. This may take a little time:
 		<pre>
-docker build -t youruser/nameOfImage .</pre>
-		youruser/nameOfImage is just a way to tag the images you create. In my case I named it dgarijo/test:v1. Later, when running the image as a container, we will use this name.
+docker build -t youruser/nameOfImage -f pathToDockerFile.</pre>
+		youruser/nameOfImage is just a way to tag the images you create. In my case I named it dgarijo/test:v1. Later, when running the image as a container, we will use this name. The -f option points to the docker file you want to build as an image. This flag is optional: if you don't include it, it will search on your local folder.
 		When Docker finishes, you should see a list of your images, similar to:
 		 
 		 </p>
 		  <div class="center">				
 					<img src="images/ho4_im10.png" alt="Listing images in Docker" width="700">
-					<div><b>Fig 31</b>: Listing images in Docker</div>
+					<div><b>Fig 33</b>: Listing images in Docker</div>
 				 </div>
 		<p>
 		 
-		Congratulations! You have just added successfully your image to your local repository. These images can be committed and exported in online repositories for others to download. That way, other researchers won’t have to build the images themselves. For example, the following image: docker pull quagbrain/tophat-bowtie2-samtools has already installed tophat, bowtie2 and samtools.
-		Now that our image is in our local repository, let’s run it:
+		Congratulations! You have just added successfully your image to your local repository. These images can be committed and exported in online repositories for others to download, as we have seen before. Now that our image is in our local repository, let’s run it:
 		</p>
 		<p>
-		<strong>Action</strong>: Execute the following command: docker run IMAGENAME samtools/samtools mpileup, where IMAGENAME is the name you have to your image (in my example, dgarijo/test:v1). As a result, you should see the following:
+		<strong>Action</strong>: Execute the following command: 
+<pre>docker run IMAGENAME samtools/samtools mpileup</pre> 
+where IMAGENAME is the name you have to your image (in my example, dgarijo/test:v1). As a result, you should see the following:
 		 
 		 </p>
 		  <div class="center">				
 					<img src="images/ho4_im11.png" alt="Running mpileup in our Docker image" width="700">
-					<div><b>Fig 32</b>: Running mpileup in our Docker image</div>
+					<div><b>Fig 34</b>: Running mpileup in our Docker image</div>
 				 </div>
 		<p>
-		Since we tried to execute the mpileup software without any input files, the system shows the samtools help interface. In order to be able to share the inputs files with our docker container, we need to mount a volume, i.e., tell the system that we want to share a folder with the container. This can be done with the “-v” option. 
-		</p><p>
-		<strong>Action</strong>:  execute the following command: docker run -v PathToFolderYouWantToShare:/out ubuntu cp /out/dockerFile /out/dockerFileCopied where the PathOfTheFolderYouWantToShare is the folder where you created the docker file. This will result in a copy of the docker file as “dockerFileCopied” in the folder you mounted in Docker.
-		</p><p>
-		Finally, let’s use Docker with samtools to sort a bam file. You can download one from the domain in WINGS.
-		</p><p>
+		Since we tried to execute the mpileup software without any input files, the system shows the samtools help interface. In order to be able to share the inputs files with our docker container, we need again to mount a volume using the “-v” option. 
+		</p>
+		<p>
 		<strong>Action</strong>:  execute the following command: 
 		</p>
 		<pre>docker run -v PathOfTheFolderWithTheBamFile:/out nameOfYourImage samtools/samtools 
@@ -445,16 +488,23 @@ sort -o /out/sorted.bam /out/canary_test.bam</pre>
 		 </p>
 		  <div class="center">				
 					<img src="images/ho4_im12.png" alt="Sorting a bam file with samtools in Docker" width="700">
-					<div><b>Fig 33</b>: Sorting a bam file with samtools in Docker</div>
+					<div><b>Fig 35</b>: Sorting a bam file with samtools in Docker</div>
 				 </div>
 		<p>
-		Congratulations! Your container works as expected. 
-		The next step is to send us the Docker file you just validated and add the invocation to the WINGS run.sh script:
+		Congratulations! Your container works as expected. Now you just need to add your dockerfile to the component and tell WINGS to execute your Docker file. Be sure to include the samtools zip file as well! Your folder should look as in the image below:
+		
+		<div class="center">				
+					<img src="images/ho4_im12._component.png" alt="Component with Docker file" width="700">
+					<div><b>Fig 36</b>: Component with Docker file</div>
+				 </div>
+		
+		And your run.sh script should tell WINGS to build the Docker file. Don't worry, the image will only be built on the first execution:
 		   </p>
 		  <div class="center">				
-					<img src="images/ho4_im13.png" alt="Modifying run.sh to add the Docker commands" width="700">
-					<div><b>Fig 34</b>: Modifying run.sh to add the Docker commands</div>
-				 </div>
+			<img src="images/ho4_im13.png" alt="Modifying run.sh to add the Docker commands" width="700">
+			<div><b>Fig 37</b>: Modifying run.sh to add the Docker commands</div>
+		 </div>
+		 As shown in the image, the script is very similar as if we used the online image, just building the Docker file and using the same name for its invocation.
 	</div>
 	<div class="clear"> </div>
 	</div>
