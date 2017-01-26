@@ -1,0 +1,31 @@
+#!/bin/bash
+
+checkExitCode() {
+if [ $? -ne 0 ]; then
+	echo "Error"
+	exit 1;
+fi
+}
+
+BASEDIR=`dirname $0`
+
+if [ $# -lt 1 ]; then echo "Error No inputs provided" && exit 1; fi
+
+. $BASEDIR/io.sh 1 0 1 "$@"
+
+#copy input into local directory
+cp $INPUTS1 $BASEDIR/input.bam
+
+#Script that invokes samtools
+docker run -v $BASEDIR:/out comics/samtools samtools sort -o /out/sorted.bam /out/input.bam
+
+#copy output
+cp $BASEDIR/sorted.bam $OUTPUTS1
+
+#remove output
+rm $BASEDIR/sorted.bam
+
+#remove input
+rm $BASEDIR/input.bam
+
+checkExitCode
