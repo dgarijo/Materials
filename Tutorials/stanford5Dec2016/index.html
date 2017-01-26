@@ -451,9 +451,10 @@ ENV PATH /samtools:$PATH</pre>
 		<p>
 		<strong>Action</strong>:  Build the image you have created and check that docker adds it to the local repository. This may take a little time:
 		<pre>
-docker build -t youruser/nameOfImage -f pathToDockerFile.</pre>
-		youruser/nameOfImage is just a way to tag the images you create. In my case I named it dgarijo/test:v1. Later, when running the image as a container, we will use this name. The -f option points to the docker file you want to build as an image. This flag is optional: if you don't include it, it will search on your local folder.
-		When Docker finishes, you should see a list of your images, similar to:
+docker build -t youruser/nameOfImage -f pathToDockerFile .</pre>
+		youruser/nameOfImage is just a way to tag the images you create. In my case I named it dgarijo/test:v1. Later, when running the image as a container, we will use this name. The -f option points to the docker file you want to build as an image. This flag is optional: if you don't include it, it will search on your local folder. Also, in some cases there are <a href="https://github.com/docker/docker/issues/14339">known issues</a>. If you run into any trouble, just use:
+		<pre>docker build -t dgarijo/test:v1 DIRECTORY .</pre>
+		Where the "DIRECTORY" contains a docker file called "Dockerfile". When Docker finishes, you should see a list of your images, similar to:
 		 
 		 </p>
 		  <div class="center">				
