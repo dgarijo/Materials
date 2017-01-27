@@ -13,19 +13,21 @@ if [ $# -lt 1 ]; then echo "Error No inputs provided" && exit 1; fi
 
 . $BASEDIR/io.sh 1 0 1 "$@"
 
+#make temporary directory
+TEMP=`pwd`/`uuidgen`
+mkdir $TEMP
+
 #copy input into local directory
-cp $INPUTS1 $BASEDIR/input.bam
+cp $INPUTS1 $TEMP/input.bam
 
 #Script that invokes samtools
-docker run -v $BASEDIR:/out comics/samtools samtools sort -o /out/sorted.bam /out/input.bam
+docker run -v $TEMP:/out comics/samtools samtools sort -o /out/sorted.bam /out/input.bam
+checkExitCode
 
 #copy output
-cp $BASEDIR/sorted.bam $OUTPUTS1
+cp $TEMP/sorted.bam $OUTPUTS1
 
-#remove output
-rm $BASEDIR/sorted.bam
-
-#remove input
-rm $BASEDIR/input.bam
+#remove temporary directory
+rm -fr $TEMP
 
 checkExitCode
