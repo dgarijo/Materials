@@ -406,20 +406,20 @@
 			<img src="images/ho4_im9executingImage.png" alt="Executing the comics/samtools image locally" width="700">
 			<div><b>Fig 30</b>: Executing the comics/samtools image locally</div>
 		 </div>
-		Basically, the program runs, but it is asking for its correct usage (we didn't invoked it correctly). Since the mpileup software requires three inputs, in this tutorial we are going to choose a simpler function from the samtools software: sort, which sorts an input bam file. In order to be able to pass the inputs file to our docker container, we need to mount a volume, i.e., tell the system that we want to share a folder with the container. This can be done with the “-v” option. 
+		Basically, the program runs, but it is asking for its correct usage (we didn't invoke it correctly). Since the mpileup software requires three inputs, in this tutorial we are going to choose a simpler function from the samtools software: sort, which sorts an input bam file. In order to be able to pass the inputs file to our docker container, we need to mount a volume, i.e., tell the system that we want to share a folder with the container. This can be done with the “-v” option. 
 		</p>
 		<p>
 		<strong>Action</strong>:  execute the following command: 
-		<pre>docker run -v PathToFolderYouWantToShare:/out comics/samtools samtoolssort -o 
+		<pre>docker run -v PathToFolderYouWantToShare:/out comics/samtools samtools sort -o 
 /out/sorted.bam /out/inputFileToSort.bam</pre> 
-		Where the PathOfTheFolderYouWantToShare is the folder where you have your input file ("inputFileToSort.bam"). This will result in a sorted file ("sorted.bam") of the input file “inputFileToSort” in the folder "PathToFolderYouWantToShare". Now that we have tested our image locally, we should test it on Wings.</p>
+		Where the PathOfTheFolderYouWantToShare is the folder where you have your input file ("inputFileToSort.bam"). This will result in a sorted file ("sorted.bam") of the input file “inputFileToSort” in the folder "PathToFolderYouWantToShare". Now that we have tested our image locally, we should test it in Wings.</p>
 		<p>
-		<strong>Action</strong>: Create a component in Wings and use the Docker image to invoke it (you can <a href="test.zip">a component template in this link</a>). The component should look similar to the picture below:
+		<strong>Action</strong>: Create a component in Wings and use the Docker image to invoke it (you can find <a href="test.zip">a component template in this link</a>). The component should look similar to the picture below:
 		<div class="center">				
 			<img src="images/ho4_im10WingsComp.png" alt="WINGS component using a Docker image" width="700">
 			<div><b>Fig 31</b>: WINGS component using a Docker image</div>
 		 </div>
-		<p>The script is similar to the console command we have executed locally, but copies the input to the local folder in order. The local folder is mounted in WINGS using the previous "-v" Docker command. The outputs are copied to the appropriate folder for WINGS (using "cp"), and the local files are removed ("rm" command).</p>
+		<p>The script is similar to the console command we have executed locally, but copies the input to a temporary folder. This way if we have ten instances of the component at the same time, they will read the appropriate temporary folder. The temporary folder is mounted in WINGS using the "-v" Docker command we have used previously. The outputs are copied to the corresponding WINGS output (using "cp"), and the local files are removed ("rm" command).</p>
 		
 		<p>Congratulations! you have a "Dockerized" component in WINGS! However, what would happen if you want to create your own image? We address this in the next section.</p>
 		
@@ -505,7 +505,7 @@ sort -o /out/sorted.bam /out/canary_test.bam</pre>
 			<img src="images/ho4_im13.png" alt="Modifying run.sh to add the Docker commands" width="700">
 			<div><b>Fig 37</b>: Modifying run.sh to add the Docker commands</div>
 		 </div>
-		 As shown in the image, the script is very similar as if we used the online image, just building the Docker file and using the same name for its invocation.
+		 As shown in the image, the script is very similar as if we used the online image, just building the Docker file and using the image name (dgarijo/test:v1) for its invocation.
 	</div>
 	<div class="clear"> </div>
 	</div>
@@ -513,7 +513,7 @@ sort -o /out/sorted.bam /out/canary_test.bam</pre>
 <div class="page"> 
 <!-- page industries -->	
 
-<div class="page_bottom"><div class="center"><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png" /></a><br/>This page was created by <a href="https://w3id.org/people/dgarijo">Daniel Garijo</a>. It is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">Creative Commons Attribution-NonCommercial-ShareAlike 2.0 Generic License</a>.
+<div class="page_bottom"><div class="center"><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/2.0/88x31.png" /></a><br/>This page was created by <a href="https://w3id.org/people/dgarijo">Daniel Garijo</a>, with the help of <a href="http://www.isi.edu/~varunr/">Varun Ratnakar</a>. It is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">Creative Commons Attribution-NonCommercial-ShareAlike 2.0 Generic License</a>.
 </div>
 </div>
 </div>
