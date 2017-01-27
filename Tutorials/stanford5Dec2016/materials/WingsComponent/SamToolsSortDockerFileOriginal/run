@@ -1,0 +1,34 @@
+#!/bin/bash
+
+checkExitCode() {
+if [ $? -ne 0 ]; then
+	echo "Error"
+	exit 1;
+fi
+}
+
+BASEDIR=`dirname $0`
+
+if [ $# -lt 1 ]; then echo "Error No inputs provided" && exit 1; fi
+
+. $BASEDIR/io.sh 1 0 1 "$@"
+
+#create a local docker image with samtools. The first time the run will be slower
+docker build -t dgarijo/test:v1 -f $BASEDIR/dockerFile .
+
+#copy input into local directory
+cp $INPUTS1 $BASEDIR/input.bam
+
+#Script that invokes samtools
+docker run -v $BASEDIR:/out dgarijo/test:v1 samtools sort -o /out/sorted.bam /out/input.bam
+
+#copy output
+cp $BASEDIR/sorted.bam $OUTPUTS1
+
+#remove output
+rm $BASEDIR/sorted.bam
+
+#remove input
+rm $BASEDIR/input.bam
+
+checkExitCode
