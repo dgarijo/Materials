@@ -1,0 +1,13 @@
+#This is a test docker file. 
+#INSTRUCTION statement
+#This files tells docker the dependencies for your software.
+#Derived from  https://github.com/johnworth/docker-samtools-bowtie2-tophat/blob/master/Dockerfile
+
+from ubuntu
+
+MAINTAINER Daniel Garijo<dgarijo@isi.edu>
+
+RUN apt-get update && apt-get install -y python unzip gcc make bzip2 zlib1g-dev ncurses-dev
+COPY samtools-1.3.1.tar.bz2 samtools.tar.bz2
+RUN bunzip2 samtools.tar.bz2 && tar xf samtools.tar && mv samtools-1.3.1 samtools && cd samtools && make
+ENV PATH /samtools:$PATH
