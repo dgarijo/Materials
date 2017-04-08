@@ -31,7 +31,7 @@ There are different actions that you might be interested in:
 4. [Run dockerized components from the WINGS Docker image, (i.e., upload Docker images of components](#sec2-4)
 
 ### Running WINGS as a Docker image  <a name="sec2-1"></a>	
-The following Docker file defines WINGS and its dependencies, plus some additional software:
+The following [Docker file](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/Dockerfile) defines WINGS and its dependencies, plus some additional software:
 
 ```
 FROM r-base
@@ -60,7 +60,7 @@ CMD /setenv.sh && service tomcat8 start && /bin/bash
 ```
 **Remarks**: This Docker file also installs samtools and tophat, so it’s somewhat heavyweight. It also installs Docker, so we can run dockerized components within our container as well.
 
-**Time to buid**: 10-15 min. Size: 1.56 GB. The Docker file sets up the WINGS environment. 
+**Time to buid**: 10-15 min (depending on your internet connection). Size: 1.56 GB. The Docker file sets up the WINGS environment. 
 
 Guidelines:
 
@@ -70,7 +70,7 @@ docker build -t [IMAGE_NAME] .
 ```
 The IMAGE_NAME should be the name of the image. In my case I called it ```wings:latest```
 
-2. Running the Docker image. Just run the file : 
+2. Running the Docker image. Just run the file [(download start-wings.sh)](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/start-wings.sh) : 
 
 ```bash
 # If [NAME] is not specified, it defaults to wings.
@@ -172,6 +172,8 @@ set -x
 	exit 0
 fi
 ```
+
+You can download [the component](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/msort.zip) and a [sample file](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/canary_test.bam) from this [github repository](https://github.com/dgarijo/Materials/tree/master/Tutorials/wings-docker/resources) as well
 
 
 
