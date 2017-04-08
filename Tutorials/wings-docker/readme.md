@@ -9,7 +9,7 @@ This tutorial aims to capture the different ways of sharing workflows with WINGS
     1. [Run WINGS as a Docker image with existing software](#sec2-1)
 	2. [Copy results produced by the executions of multiple workflows into your local computer](#sec2-2)
 	3. [Import a domain into a WINGS dockerized image](#sec2-3)
-	4. [Run dockerized components from the WINGS Docker image, (i.e., upload Docker images of components](#sec2-4)
+	4. [Run dockerized components from the WINGS Docker image, (i.e., upload Docker images of components)](#sec2-4)
 	5. [Save workflow descriptions in a new Docker image (Not included at the moment)](#sec2-5) 
 
 ## Sharing a single component <a name="sec1"></a>
@@ -28,7 +28,7 @@ There are different actions that you might be interested in:
 1. [Run WINGS as a Docker image with existing software](#sec2-1)
 2. [Copy results produced by the executions of multiple workflows into your local computer](#sec2-2)
 3. [Import a domain into a WINGS dockerized image](#sec2-3)
-4. [Run dockerized components from the WINGS Docker image, (i.e., upload Docker images of components](#sec2-4)
+4. [Run dockerized components from the WINGS Docker image, (i.e., upload Docker images of components)](#sec2-4)
 
 ### Running WINGS as a Docker image  <a name="sec2-1"></a>	
 The following [Docker file](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/Dockerfile) defines WINGS and its dependencies, plus some additional software:
