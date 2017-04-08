@@ -1,0 +1,7 @@
+from ubuntu
+
+MAINTAINER Daniel Garijo<dgarijo@isi.edu>
+
+RUN apt-get update && apt-get install -y unzip gcc make bzip2 unzip
+COPY PIHM-GLM.zip PIHM.zip
+RUN unzip PIHM.zip && cd PIHM-GLM && make pihm
