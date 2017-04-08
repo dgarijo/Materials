@@ -33,7 +33,7 @@ There are different actions that you might be interested in:
 4. [Run dockerized components from the WINGS Docker image, (i.e., upload Docker images of components)](#sec2-4)
 
 ### Running WINGS as a Docker image  <a name="sec2-1"></a>	
-The following [Docker file](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/Dockerfile) defines WINGS and its dependencies, plus some additional software. You also need to have the [file for setting up the environment] (https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/setenv.sh) on the same location as your Docker file.
+The following [Docker file](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/Dockerfile) defines WINGS and its dependencies, plus some additional software. You also need to have the [file for setting up the environment](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/setenv.sh) on the same location as your Docker file.
 
 ```
 FROM r-base
