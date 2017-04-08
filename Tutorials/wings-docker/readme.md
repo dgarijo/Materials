@@ -2,6 +2,8 @@
 
 This tutorial aims to capture the different ways of sharing workflows with WINGS and Docker.
 
+**Requirements**: Have [Docker](http://docker.com/) installed.
+
 ## Table of contents
 1. [Sharing a single component](#sec1)
 	1. [Building a wrapper to run a Docker image of our component](#sec1-1)
