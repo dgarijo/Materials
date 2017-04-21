@@ -1,10 +1,11 @@
 # Sharing WINGS workflows with Docker
 
-This tutorial aims to capture the different ways of sharing workflows with WINGS and Docker.
+This tutorial aims to capture the different ways of sharing scientific workflows with [WINGS}(http://wings-workflows.org/) and [Docker](http://docker.com/).
 
 **Requirements**: Have [Docker](http://docker.com/) installed.
 
 ## Table of contents
+0. [Glossary of terms](#sec0)
 1. [Sharing a single component](#sec1)
 	1. [Building a wrapper to run a Docker image of our component](#sec1-1)
 2. [Sharing a WINGS instance with pre-installed software](#sec2)
@@ -14,13 +15,27 @@ This tutorial aims to capture the different ways of sharing workflows with WINGS
 	4. [Run dockerized components from the WINGS Docker image, (i.e., upload Docker images of components)](#sec2-4)
 	5. [Save workflow descriptions in a new Docker image (Not included at the moment)](#sec2-5) 
 
+## Glossary of terms <a name="sec0"></a>
+Throughout this tutorial we will be using a common set of terms, which is defined further below:
+
+**Workflow component**: Identifies a script that is used to perform a computational step in your experiment. For example, if in your experiment you need to filter the data and use a script for that, we can consider that script a workflow component.
+
+**Scientific workflow**: A set of components and their corresponding dependencies. In data-oriented experiments, scientific workflows tend to be represented as directed acyclic graphs, where the nodes represent components and data inputs and outputs, and the edges represent their connections. 
+
+**Workflow system**: Framework that can design and use workflow specifications to execute them and produce the results. 
+
+**WINGS**: The workflow system we will be using in this tutorial
+
+
 ## Sharing a single component <a name="sec1"></a>
-Scientists usually write components in order to share them with other scientists. These components often have dependencies and use particular types of data in their executions. In this scenario, we aim to share a WINGS workflow component into an existing WINGS instance deployed in a server, or upload a dockerized version of our component to WINGS without having to install anything on the server ourselves.
+Scientists usually describe the set of components or scripts they develop in a computational experiment for two main reasons: 1) To be able to reproduce their own experiments in the future and 2) to share these components with the rest of the scientific community. However, components often have dependencies and use particular types of data in their executions, being difficult to re-execute in other computers. 
+
+In this section of the tutorial we aim to upload a dockerized version of our component to WINGS without having to install all the dependencies on the server ourselves.
 
 ### Building a wrapper to run a Docker image of our component <a name="sec1-1"></a>
-There are two ways of running components in WINGS through Docker, and for both of them you first need to **install Docker on the WINGS server**. Then, the first option is to create a Docker file for your image, and use the name of that Docker file in your script. 
+There are two ways of running components in WINGS through Docker, and for both of them you first need to **install Docker on the WINGS server**. Then, the first option is to create a Docker file for your image, and use the name of that Docker file in your component. The second option is to directly import a Docker image from an external repository like DockerHub. 
 
-The second option is to directly import a Docker image from an external repository like DockerHub. A tutorial summarizes both approaches in the following link:
+A tutorial covering both approaches can be found in the following link:
 https://dgarijo.github.io/Materials/Tutorials/stanford5Dec2016/#software2
 
 
@@ -90,6 +105,13 @@ docker run --interactive \
                --publish 8080:8080 \
                ${ARGS} wings:latest
 ```
+If you want to stop the WINGS container, execute the following command:
+
+```bash
+docker stop wings
+```
+
+**Attention: If you remove a container execution, you will delete the data, workflows and executions created on it. You can stop the execution without an issue.**
 
 If you start and stop your container several times, sometimes the volume is not mounted correctly and leads to errors. In those cases you should remove your volume: 
 
@@ -98,7 +120,7 @@ docker volume rm wings_vol
 ```
 And call the ```start-wings.sh``` script again
 
-**Attention: If you remove a container execution, you will delete the data, workflows and executions created on it.**
+**Attention: If you remove the volume, you will delete the data, workflows and executions created on the container.**
 
 3. Accessing the web interface from the Docker image: ```http://localhost:8080/wings-portal```
 
