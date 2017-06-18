@@ -1,2 +1,2 @@
 # Materials
-A repository to store my talks and tutorials
+A repository to store my talks, tutorials and other materials.

@@ -11,9 +11,10 @@ This tutorial aims to capture the different ways of sharing scientific workflows
 2. [Sharing a WINGS instance with pre-installed software](#sec2)
     1. [Run WINGS as a Docker image with existing software](#sec2-1)
 	2. [Copy results produced by the executions of multiple workflows into your local computer](#sec2-2)
-	3. [Import a domain into a WINGS dockerized image](#sec2-3)
-	4. [Run dockerized components from the WINGS Docker image, (i.e., upload Docker images of components)](#sec2-4)
-	5. [Save workflow descriptions in a new Docker image (Not included at the moment)](#sec2-5) 
+	3. [Import a WINGS' domain into a WINGS dockerized image](#sec2-3)
+	4. [Run dockerized components in the WINGS Docker image, (i.e., upload custom Docker images of components in WINGS)](#sec2-4)
+	5. [Save workflow descriptions in a new Docker image (TBD)](#sec2-5) 
+	6. [Upload your image to DockerHub (TBD)](#sec2-6) 
 
 ## Glossary of terms <a name="sec0"></a>
 Throughout this tutorial we will be using a common set of terms, which is defined further below:
@@ -111,7 +112,7 @@ If you want to stop the WINGS container, execute the following command:
 docker stop wings
 ```
 
-**Attention: If you remove a container execution, you will delete the data, workflows and executions created on it. You can stop the execution without an issue.**
+**Attention: If you remove a container execution, you will delete the data, workflows and executions created on it. You can stop the execution without an issue.** See [Section 5](#sec2-5) to save your changes in the image.
 
 If you start and stop your container several times, sometimes the volume is not mounted correctly and leads to errors. In those cases you should remove your volume: 
 
@@ -120,7 +121,7 @@ docker volume rm wings_vol
 ```
 And call the ```start-wings.sh``` script again
 
-**Attention: If you remove the volume, you will delete the data, workflows and executions created on the container.**
+**Attention: If you remove the volume, you will delete the data, workflows and executions created on the container.** See [Section 5](#sec2-5) to save your changes in the image.
 
 3. Accessing the web interface from the Docker image: ```http://localhost:8080/wings-portal```
 
@@ -198,6 +199,25 @@ fi
 ```
 
 You can download [the component](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/msort.zip) and a [sample file](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/canary_test.bam) from this [github repository](https://github.com/dgarijo/Materials/tree/master/Tutorials/wings-docker/resources) as well.
+
+### Save workflow descriptions and data in your image <a name="sec2-5"></a>
+
+Imagine that you have been playing the WINGS container for a while, and now you want to preserve your progress.
+
+**To do this part of the tutorial**
+
+If you are interested in preserving your data and workflows, you can mount a volume as we have shown in the previous steps.
+tell here how to do that. Which folder is the one it should be copied.
+
+The second approach is to docker commit <container_id> iman/ping 
+
+(I have to try the command). In theory this will preserve everything, even if you have installed new stuff to the container.
+
+### Upload your image to DockerHub <a name="sec2-6"></a>
+
+Explain how that's done with this: https://deis.com/blog/2015/creating-sharing-first-docker-image/
+
+I will probably have to create an account in DockerHub
 
 Acknowledgements: This tutorial was written by Daniel Garijo, in collaboration with Varun Ratnakar and Rajiv Mayani.
 
