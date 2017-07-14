@@ -1,6 +1,8 @@
 # Sharing WINGS workflows with Docker
 
-This tutorial aims to capture the different ways of sharing scientific workflows with [WINGS}(http://wings-workflows.org/) and [Docker](http://docker.com/).
+**Authors**: Daniel Garijo, Varun Ratnakar and Rajiv Mayani.
+
+**Goals**: This tutorial aims to capture the different ways of sharing scientific workflows with [WINGS](http://wings-workflows.org/) and [Docker](http://docker.com/).
 
 **Requirements**: Have [Docker](http://docker.com/) installed.
 
@@ -11,10 +13,10 @@ This tutorial aims to capture the different ways of sharing scientific workflows
 2. [Sharing a WINGS instance with pre-installed software](#sec2)
     1. [Run WINGS as a Docker image with existing software](#sec2-1)
 	2. [Copy results produced by the executions of multiple workflows into your local computer](#sec2-2)
-	3. [Import a WINGS' domain into a WINGS dockerized image](#sec2-3)
-	4. [Run dockerized components in the WINGS Docker image, (i.e., upload custom Docker images of components in WINGS)](#sec2-4)
-	5. [Save workflow descriptions in a new Docker image (TBD)](#sec2-5) 
-	6. [Upload your image to DockerHub (TBD)](#sec2-6) 
+3. [Import a WINGS' domain into a WINGS dockerized image](#sec2-3)
+4. [Run dockerized components in the WINGS Docker image, (i.e., upload custom Docker images of components in WINGS)](#sec2-4)
+5. [Save workflow descriptions in a new Docker image](#sec2-5) 
+	1. [Upload your image to DockerHub](#sec2-6) 
 
 ## Glossary of terms <a name="sec0"></a>
 Throughout this tutorial we will be using a common set of terms, which is defined further below:
@@ -159,7 +161,7 @@ This functionality can be done as if we did it through the portal:
 
 2. Click on ```Add``` and ```Import domain```. 
 
-3. Go to http://www.wings-workflows.org/domains/ and select the URL of the domain to download.
+3. Go to http://www.wings-workflows.org/domains/ and select the URL of the domain to download. This tutorial has been tested successfully with the domain in students/CaesarCypher.zip, running the CaesarCypher workflow (it has no infrastructure dependencies). Other domains may have particular infrastructure requirements that would need to be installed on your Docker image.  
 
 4. Click submit and wait until the domain is imported. It should appear shortly after in your domain list.
 
@@ -202,24 +204,20 @@ You can download [the component](https://dgarijo.github.io/Materials/Tutorials/w
 
 ### Save workflow descriptions and data in your image <a name="sec2-5"></a>
 
-Imagine that you have been playing the WINGS container for a while, and now you want to preserve your progress.
+Imagine that you have been working with your WINGS container for a while, and now you want to preserve your progress. One option is to copy your  WINGS data and components into a local volume as we have done in [Section 2.2](#sec2-2). Another way is to save all the changes in the current image, in order to have them available for the future. In order to achieve this, you have to follow the next steps:
 
-**To do this part of the tutorial**
+1. Execute ```docker ps``` and save the container id of your wings:latest image.
 
-If you are interested in preserving your data and workflows, you can mount a volume as we have shown in the previous steps.
-tell here how to do that. Which folder is the one it should be copied.
+2. Execute ```docker commit <container_id> <image name>```. For example, in my particular case this was:  ```docker commit f4723e4febb8 wings:latest```, because I wanted to save the image under the wings:latest name.
 
-The second approach is to docker commit <container_id> iman/ping 
+And that's all. Now, next time you start the [start-wings.sh script](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/start-wings.sh), you will have all you commited changes available in the WINGS image. 
 
-(I have to try the command). In theory this will preserve everything, even if you have installed new stuff to the container.
+**Remember:** If you want to preserve further changes, you will have to commit them every time. The commit operation will not include any data contained in volumes mounted inside the container.
+
 
 ### Upload your image to DockerHub <a name="sec2-6"></a>
 
-Explain how that's done with this: https://deis.com/blog/2015/creating-sharing-first-docker-image/
-
-I will probably have to create an account in DockerHub
-
-Acknowledgements: This tutorial was written by Daniel Garijo, in collaboration with Varun Ratnakar and Rajiv Mayani.
+Once you have an image ready, the next step is to make it available online. First, you need to [create a Docker id](https://docs.docker.com/docker-id/), which will allow you to register images on the Docker cloud. Then, you just have to follow the steps [indicated in the Docker documentation](https://docs.docker.com/docker-cloud/builds/push-images/) to push your image online.
 
 
 
