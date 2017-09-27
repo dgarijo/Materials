@@ -50,7 +50,16 @@ There are different actions that you might be interested in:
 3. [Import a domain into a WINGS dockerized image](#sec2-3)
 4. [Run dockerized components from the WINGS Docker image, (i.e., upload Docker images of components)](#sec2-4)
 
-### Running WINGS as a Docker image  <a name="sec2-1"></a>	
+### Running WINGS as a Docker image  <a name="sec2-1"></a>
+
+#### Alternative one: Pull the docker image from the WINGS repository
+Execute the following to pull the image we built:
+
+```docker pull kcapd/wings```
+
+(Jump to the ["Running the Docker image" section](#run))
+
+#### Alternative two: Build the docker image yourself
 The following [Docker file](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/Dockerfile) defines WINGS and its dependencies, plus some additional software. You also need to have the [file for setting up the environment](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/setenv.sh) on the same location as your Docker file.
 
 ```
@@ -82,15 +91,17 @@ CMD /setenv.sh && service tomcat8 start && /bin/bash
 
 **Time to buid**: 10-15 min (depending on your internet connection). Size: 1.56 GB. The Docker file sets up the WINGS environment. 
 
-Guidelines:
+Now you just have to build the docker image:
 
-1. Building the docker image:
 ``` 
 docker build -t [IMAGE_NAME] .
 ```
 The IMAGE_NAME should be the name of the image. In my case I called it ```wings:latest```
 
-2. Running the Docker image. Just run the file [(download start-wings.sh)](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/start-wings.sh) : 
+
+#### Running the Docker image <a name="run"></a> 
+
+Run the file [(download start-wings.sh)](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/start-wings.sh) : 
 
 ```bash
 # If [NAME] is not specified, it defaults to wings.
@@ -108,6 +119,8 @@ docker run --interactive \
                --publish 8080:8080 \
                ${ARGS} wings:latest
 ```
+**Note:** If you pulled the image from the kcapd repository, use "kcapd/wings" instead of "wings:latest".
+
 If you want to stop the WINGS container, execute the following command:
 
 ```bash
@@ -125,7 +138,7 @@ And call the ```start-wings.sh``` script again
 
 **Attention: If you remove the volume, you will delete the data, workflows and executions created on the container.** See [Section 5](#sec2-5) to save your changes in the image.
 
-3. Accessing the web interface from the Docker image: ```http://localhost:8080/wings-portal```
+Accessing the web interface from the Docker image: ```http://localhost:8080/wings-portal```
 
 ### Copy results from different executions into your local computer <a name="sec2-2"></a>
 

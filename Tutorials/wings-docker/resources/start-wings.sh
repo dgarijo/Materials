@@ -38,7 +38,7 @@ else
                --tty \
                --env WINGS_MODE='dind' \
                --volume "${NAME}_vol":/opt/wings \
-			   #--volume "c:/Users/dgarijo/Desktop/sharedFolder":/out \
+			   --volume "c:/Users/dgarijo/Desktop/sharedFolder":/out \
                --name ${NAME} \
                --publish 8080:8080 \
                ${ARGS} wings:latest
