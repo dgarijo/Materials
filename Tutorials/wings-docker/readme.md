@@ -139,7 +139,7 @@ If you want to stop the WINGS container, execute the following command:
 docker stop wings
 ```
 
-**Attention: If you remove a container execution, you will delete the data, workflows and executions created on it. You can stop the execution without an issue.** See [Section 5](#sec2-5) to save your changes in the image.
+**Attention: If you remove a container execution, you will delete the data, workflows and executions created on it. You can stop the execution without an issue.** See [Section 2](#sec2-2) to save your changes locally.
 
 If you start and stop your container several times, sometimes the volume is not mounted correctly and leads to errors. In those cases you should remove your volume: 
 
@@ -148,7 +148,7 @@ docker volume rm wings_vol
 ```
 And call the ```start-wings.sh``` script again
 
-**Attention: If you remove the volume, you will delete the data, workflows and executions created on the container.** See [Section 5](#sec2-5) to save your changes in the image.
+**Attention: If you remove the volume, you will delete the data, workflows and executions created on the container.** See [Section 2](#sec2-2) to save your changes locally.
 
 Accessing the web interface from the Docker image: ```http://localhost:8080/wings-portal```
 
