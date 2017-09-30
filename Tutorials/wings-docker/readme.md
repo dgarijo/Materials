@@ -55,41 +55,53 @@ There are different actions that you might be interested in:
 #### Alternative one: Pull the docker image from the WINGS repository
 Execute the following to pull the image we built:
 
-```docker pull kcapd/wings```
+```docker pull kcapd/wings-base```
+
+or, if you are interested in an image with pre-installed genomics components (such as TopHat, samtools, etc.), try: ```docker pull kcapd/wings-genomics```
 
 (Jump to the ["Running the Docker image" section](#run))
 
 #### Alternative two: Build the docker image yourself
-The following [Docker file](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/Dockerfile) defines WINGS and its dependencies, plus some additional software. You also need to have the [file for setting up the environment](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/setenv.sh) on the same location as your Docker file.
+The following [Docker file](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/Dockerfile) defines WINGS and its dependencies. 
 
 ```
-FROM r-base
-MAINTAINER Varun Ratnakar <varunratnakar@gmail.com>
+FROM debian:jessie
 RUN sed -i 's/debian testing main/debian testing main contrib non-free/' /etc/apt/sources.list
+
+# Install general tools
 RUN apt-get update
-# Modified by Rajiv: Start
-RUN userdel docker && apt-get -y install graphviz curl unzip curl openssl libssl-dev libcurl4-openssl-dev libxml2-dev python-pip tomcat8 docker.io
-# Modified by Rajiv: End
-RUN apt-get -y install samtools tophat cufflinks
-RUN pip install RSeQC
-RUN mkdir -p /opt/wings/storage/default /opt/wings/server
-ADD http://www.wings-workflows.org/downloads/docker/latest/portal/wings-portal.xml /etc/tomcat8/Catalina/localhost/wings-portal.xml
-ADD http://www.wings-workflows.org/downloads/docker/latest/portal/portal.properties /opt/wings/storage/default/portal.properties
-RUN cd /opt/wings/server && curl -O http://www.wings-workflows.org/downloads/docker/latest/portal/wings-portal.war && unzip wings-portal.war && rm wings-portal.war
+RUN apt-get -y install graphviz unzip curl libssl-dev libcurl4-openssl-dev libxml2-dev python-pip tomcat8 git cgroupfs-mount maven
+
+# Install WINGS
+RUN mkdir -p /opt/wings/storage/default
+ADD ./config/default/wings-portal.xml /etc/tomcat8/Catalina/localhost/wings-portal.xml
+ADD ./config/default/portal.properties /opt/wings/storage/default/portal.properties
+RUN mkdir /wings-src
+ADD ./config/pom.xml /wings-src/pom.xml
+RUN cd /wings-src && mvn package
+RUN cp -R /wings-src/target/wings-portal-4.0 /opt/wings/server
 RUN sed -i 's/Resource name="UserDatabase" auth/Resource name="UserDatabase" readonly="false" auth/' /etc/tomcat8/server.xml
 RUN sed -i 's/=tomcat8/=root/' /etc/default/tomcat8
 RUN sed -i 's/<\/tomcat-users>/  <user username="admin" password="4dm1n!23" roles="WingsUser,WingsAdmin"\/>\n<\/tomcat-users>/' /etc/tomcat8/tomcat-users.xml
-ADD http://www.wings-workflows.org/downloads/docker/latest/domain/R-install.R /tmp/R-install.R
-RUN Rscript /tmp/R-install.R
-# Added by Rajiv: Start
-ADD ./setenv.sh /setenv.sh
+ADD http://www.wings-workflows.org/downloads/docker/latest/portal/setenv.txt /setenv.sh
 EXPOSE 8080
-# Added by Rajiv: End
+
+# Install Docker
+RUN apt-get -y install --no-install-recommends apt-transport-https ca-certificates software-properties-common gnupg2
+RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | apt-key add -
+RUN add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+   $(lsb_release -cs) \
+   stable"
+RUN apt-get update && apt-get -y install docker-ce
+
+# Start WINGS
+RUN chmod 755 /setenv.sh 
 CMD /setenv.sh && service tomcat8 start && /bin/bash
 ```
-**Remarks**: This Docker file also installs samtools and tophat, so it’s somewhat heavyweight. It also installs Docker, so we can run dockerized components within our container as well.
+**Remarks**: This Docker file also installs Docker, so we can run dockerized components within our container as well.
 
-**Time to buid**: 10-15 min (depending on your internet connection). Size: 1.56 GB. The Docker file sets up the WINGS environment. 
+**Time to buid**: 10-15 min (depending on your internet connection). Size: 1.08 GB. The Docker file sets up the WINGS environment. 
 
 Now you just have to build the docker image:
 
@@ -108,7 +120,7 @@ Run the file [(download start-wings.sh)](https://dgarijo.github.io/Materials/Tut
 ./start-wings.sh [NAME]
 ```
 
-This file will execute the container with the following options (it is assumed that the image name is wings:latest):
+This file will execute the container with the following options (it is assumed that the image name is kcapd/wings-base:latest):
 
 ```bash
 docker run --interactive \
@@ -119,7 +131,7 @@ docker run --interactive \
                --publish 8080:8080 \
                ${ARGS} wings:latest
 ```
-**Note:** If you pulled the image from the kcapd repository, use "kcapd/wings" instead of "wings:latest".
+**Note:** If you pulled the image from the kcapd repository, use "kcapd/wings-base" instead of "wings:latest".
 
 If you want to stop the WINGS container, execute the following command:
 
@@ -215,9 +227,9 @@ fi
 
 You can download [the component](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/msort.zip) and a [sample file](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/canary_test.bam) from this [github repository](https://github.com/dgarijo/Materials/tree/master/Tutorials/wings-docker/resources) as well.
 
-### Save workflow descriptions and data in your image <a name="sec2-5"></a>
+### Save installed software in your image <a name="sec2-5"></a>
 
-Imagine that you have been working with your WINGS container for a while, and now you want to preserve your progress. One option is to copy your  WINGS data and components into a local volume as we have done in [Section 2.2](#sec2-2). Another way is to save all the changes in the current image, in order to have them available for the future. In order to achieve this, you have to follow the next steps:
+Imagine that you have installed additional software on your WINGS container, and now you want to preserve it. You have to follow the following steps:
 
 1. Execute ```docker ps``` and save the container id of your wings:latest image.
 
@@ -225,7 +237,7 @@ Imagine that you have been working with your WINGS container for a while, and no
 
 And that's all. Now, next time you start the [start-wings.sh script](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/start-wings.sh), you will have all you commited changes available in the WINGS image. 
 
-**Remember:** If you want to preserve further changes, you will have to commit them every time. The commit operation will not include any data contained in volumes mounted inside the container.
+**Remember:** If you want to preserve further changes, you will have to commit them every time. The commit operation will not include any data contained in volumes mounted inside the container. If you want to preserve any data or workflow descriptions, you should copy the /opt/wings/storage folder into your computer (e.g., as we have done in [Section 2.2](#sec2-2)) and then copy it back when you load your image.
 
 
 ### Upload your image to DockerHub <a name="sec2-6"></a>
