@@ -227,22 +227,34 @@ fi
 
 You can download [the component](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/msort.zip) and a [sample file](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/canary_test.bam) from this [github repository](https://github.com/dgarijo/Materials/tree/master/Tutorials/wings-docker/resources) as well.
 
-### Save installed software in your image <a name="sec2-5"></a>
+### Share a Docker image with workflows, new software and data.<a name="sec2-5"></a>
 
-Imagine that you have installed additional software on your WINGS container, and now you want to preserve it. You have to follow the following steps:
+In order to save ALL the workflows, executions, new installed software and data from an image, you must follow the next steps:
 
-1. Execute ```docker ps``` and save the container id of your wings:latest image.
+1. Stop the tomcat service in your WINGS image (for consistency). Execute ```service tomcat8 stop```
 
-2. Execute ```docker commit <container_id> <image name>```. For example, in my particular case this was:  ```docker commit f4723e4febb8 wings:latest```, because I wanted to save the image under the wings:latest name.
+2. Copy the "default" folder in the image. You must use the same terminal in which the WINGS image was executing: ```cp -r /opt/wings/storage/ /storage```. Also, you may restart the tomcat service now if you want to continue using WINGS: ```service tomcat8 start```
 
-And that's all. Now, next time you start the [start-wings.sh script](https://dgarijo.github.io/Materials/Tutorials/wings-docker/resources/start-wings.sh), you will have all you commited changes available in the WINGS image. 
+3. Open a **new terminal** and type: ```docker ps -aq | xargs -I  % docker commit % genomics-new```. This will save your current image as "genomics-new". Please change the name if you want your image tobe saved under a different name. **Note:** this assumes that you are only executing one container. If you are executing several containers at the same time, execute ```docker ps``` and then use the id of your container when committing the new image.
 
-**Remember:** If you want to preserve further changes, you will have to commit them every time. The commit operation will not include any data contained in volumes mounted inside the container. If you want to preserve any data or workflow descriptions, you should copy the /opt/wings/storage folder into your computer (e.g., as we have done in [Section 2.2](#sec2-2)) and then copy it back when you load your image.
+All your contents are now saved on "genomics-new". You can check this by executing ```docker images``` and checking that your new image is bigger in size than the original one.
+
+### Load data, workflows and software from a committed image.
+
+In the previous section we have seen how to save your domains in a local image. However, if you run start-wings.sh you will see that WINGS is not loading everything correctly. You must follow the next steps to address this issue:
+
+1. In your image, stop the tomcat service: ```service tomcat8 stop```.
+
+2. Load the folder we just saved in the right path: ```cp -r /storage/ /opt/wings```
+
+3. Restart the tomcat: ```service tomcat8 start```
+
+And that's it! if you reload your browser you should see all your workflows and domains as you left them.
 
 
 ### Upload your image to DockerHub <a name="sec2-6"></a>
 
-Once you have an image ready, the next step is to make it available online. First, you need to [create a Docker id](https://docs.docker.com/docker-id/), which will allow you to register images on the Docker cloud. Then, you just have to follow the steps [indicated in the Docker documentation](https://docs.docker.com/docker-cloud/builds/push-images/) to push your image online.
+Once you have an image ready, the next step is to make it available online. First, you need to [create a Docker id](https://docs.docker.com/docker-id/), which will allow you to register images on the Docker cloud. Then, you have to login, tag and push your image, as [indicated in the Docker documentation](https://docs.docker.com/docker-cloud/builds/push-images/) to push your image online in your repository. Note that you can only push to a repository where you have privileges. 
 
 
 
