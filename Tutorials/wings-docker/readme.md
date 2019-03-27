@@ -129,7 +129,7 @@ docker run --interactive \
                --volume "${NAME}_vol":/opt/wings \
                --name ${NAME} \
                --publish 8080:8080 \
-               ${ARGS} wings:latest
+               ${ARGS} kcapd/wings-base:latest
 ```
 **Note:** If you pulled the image from the kcapd repository, use "kcapd/wings-base" instead of "wings:latest".
 
