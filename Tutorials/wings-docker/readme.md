@@ -254,7 +254,7 @@ And that's it! if you reload your browser you should see all your workflows and 
 
 ### Upload your image to DockerHub <a name="sec2-6"></a>
 
-Once you have an image ready, the next step is to make it available online. First, you need to [create a Docker id](https://docs.docker.com/docker-id/), which will allow you to register images on the Docker cloud. Then, you have to login, tag and push your image, as [indicated in the Docker documentation](https://docs.docker.com/docker-cloud/builds/push-images/) to push your image online in your repository. Note that you can only push to a repository where you have privileges. 
+Once you have an image ready, the next step is to make it available online. First, you need to [create a Docker id](https://docs.docker.com/docker-id/), which will allow you to register images on the Docker cloud. Then, you have to login, tag and push your image, as [indicated in the Docker documentation](https://docs.docker.com/engine/reference/commandline/push/) to push your image online in your repository. Note that you can only push to a repository where you have privileges. 
 
 
 
